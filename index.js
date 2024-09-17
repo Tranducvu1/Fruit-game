@@ -171,25 +171,25 @@ function resolveBounce(obj1, obj2) {
     const distance = Math.sqrt(dx * dx + dy * dy);
     const overlap = (obj1.radius + obj2.radius) - distance;
 
-    const moveX = (dx / distance) * overlap / 2;
-    const moveY = (dy / distance) * overlap / 2;
+    if (overlap > 0) {
+        const moveX = (dx / distance) * overlap / 2;
+        const moveY = (dy / distance) * overlap / 2;
 
-    obj1.x -= moveX;
-    obj1.y -= moveY;
-    obj2.x += moveX;
-    obj2.y += moveY;
+        obj1.x -= moveX;
+        obj1.y -= moveY;
+        obj2.x += moveX;
+        obj2.y += moveY;
 
-    const tempVelocityY = obj1.velocityY;
-    obj1.velocityY = obj2.velocityY;
-    obj2.velocityY = tempVelocityY;
+        // Ensure objects don't sink below the canvas
+        obj1.y = Math.min(obj1.y, canvas.height - obj1.radius);
+        obj2.y = Math.min(obj2.y, canvas.height - obj2.radius);
 
-    // const currentTime = Date.now();
-    // if (currentTime - obj1.lastCollisionTime > soundCooldown && 
-    //     currentTime - obj2.lastCollisionTime > soundCooldown) {
+        const tempVelocityY = obj1.velocityY;
+        obj1.velocityY = obj2.velocityY;
+        obj2.velocityY = tempVelocityY;
+
         playSound('click');
-    //     obj1.lastCollisionTime = currentTime;
-    //     obj2.lastCollisionTime = currentTime;
-    // }
+    }
 }
 function isHorizontalFilled() {
     const filled = new Array(canvas.width).fill(false);
@@ -271,7 +271,6 @@ function playSound(soundName) {
 }
 
 let lastTime = 0;
-
 function gameLoop(currentTime) {
     const deltaTime = (currentTime - lastTime) / 1000; 
     lastTime = currentTime;
