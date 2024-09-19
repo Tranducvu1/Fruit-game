@@ -173,16 +173,21 @@ function resolveBounce(obj1, obj2) {
 
     if (overlap > 0) {
         const moveX = (dx / distance) * overlap / 2;
-        const moveY = (dy / distance) * overlap / 2;
+      //  const moveY = (dy / distance) * overlap / 2;
 
+      
+     //   obj2.y += moveY;
         obj1.x -= moveX;
-        obj1.y -= moveY;
+     //  obj1.y -= moveY;
         obj2.x += moveX;
-        obj2.y += moveY;
+      //  obj2.y += moveY;
+
+        obj1.x = Math.max(obj1.radius, Math.min(canvas.width - obj1.radius, obj1.x - moveX));
+        obj2.x = Math.max(obj2.radius, Math.min(canvas.width - obj2.radius, obj2.x + moveX));
 
         // Ensure objects don't sink below the canvas
         obj1.y = Math.min(obj1.y, canvas.height - obj1.radius);
-        obj2.y = Math.min(obj2.y, canvas.height - obj2.radius);
+     //  obj2.y = Math.min(obj2.y, canvas.height - obj2.radius);
 
         const tempVelocityY = obj1.velocityY;
         obj1.velocityY = obj2.velocityY;
@@ -223,7 +228,7 @@ function checkGameOver() {
     if (isHorizontalFilled()) {
         for (let i = 0; i < gameObjects.length; i++) {
             const obj = gameObjects[i];
-            if (obj.y - obj.radius <= loseHeight) {
+            if (obj.y - obj.radius >= loseHeight) {
                 gameState = 'gameOver';
                 renderGameOver();
                 return true;

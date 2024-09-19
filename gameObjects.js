@@ -20,7 +20,7 @@ class GameObject {
         if (this.falling) {
             this.velocityY += gravity;
             this.y += this.velocityY * deltaTime;
-            
+            this.x = Math.max(this.radius, Math.min(canvas.width - this.radius, this.x));
             if (this.y + this.radius > canvas.height) {
                 this.y = canvas.height - this.radius;
                 this.velocityY = 0;
