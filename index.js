@@ -8,7 +8,7 @@ let previewBall;
 const gravity = 9.8;
 let score = 0;
 let highScore = localStorage.getItem('highScore') || 0;
-const loseHeight = 100;
+const loseHeight = canvas.height * 0.7;
 let ballCount = 0;
 let gameState = 'menu';
 let Failing = false;
@@ -173,21 +173,21 @@ function resolveBounce(obj1, obj2) {
 
     if (overlap > 0) {
         const moveX = (dx / distance) * overlap / 2;
-      //  const moveY = (dy / distance) * overlap / 2;
+       const moveY = (dy / distance) * overlap / 2;
 
       
-     //   obj2.y += moveY;
+      obj2.y += moveY;
         obj1.x -= moveX;
-     //  obj1.y -= moveY;
+       obj1.y -= moveY;
         obj2.x += moveX;
-      //  obj2.y += moveY;
+       obj2.y += moveY;
 
         obj1.x = Math.max(obj1.radius, Math.min(canvas.width - obj1.radius, obj1.x - moveX));
         obj2.x = Math.max(obj2.radius, Math.min(canvas.width - obj2.radius, obj2.x + moveX));
 
         // Ensure objects don't sink below the canvas
         obj1.y = Math.min(obj1.y, canvas.height - obj1.radius);
-     //  obj2.y = Math.min(obj2.y, canvas.height - obj2.radius);
+      obj2.y = Math.min(obj2.y, canvas.height - obj2.radius);
 
         const tempVelocityY = obj1.velocityY;
         obj1.velocityY = obj2.velocityY;
@@ -209,8 +209,6 @@ function isHorizontalFilled() {
 
     return filled.every(val => val === true);
 }
-
-
 
 function renderGameOver() {
     c.font = '48px Arial';

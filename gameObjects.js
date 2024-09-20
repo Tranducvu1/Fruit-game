@@ -17,10 +17,13 @@ class GameObject {
     }
 
     update(deltaTime) {
+            //check failing no create ball
         if (this.falling) {
             this.velocityY += gravity;
             this.y += this.velocityY * deltaTime;
-            this.x = Math.max(this.radius, Math.min(canvas.width - this.radius, this.x));
+            this.x = Math.max(this.radius, Math.min(canvas.width - this.radius, this.x));   
+
+            //object.y+radius > check height -> stop
             if (this.y + this.radius > canvas.height) {
                 this.y = canvas.height - this.radius;
                 this.velocityY = 0;
@@ -29,7 +32,6 @@ class GameObject {
             }
         }
     }
-
     draw() {
         c.drawImage(this.img, this.x - this.radius, this.y - this.radius, this.radius * 2, this.radius * 2);
     }
