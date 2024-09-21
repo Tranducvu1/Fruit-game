@@ -5,7 +5,7 @@ function update(deltaTime) {
         }
     }
 }
-
+//menu ui choose 
 function renderMenu() {
     // Draw menu background
     c.drawImage(menuBackgroundImg, canvas.width / 2 - 256, canvas.height * 0.4 - 256, 512, 512);
@@ -29,7 +29,7 @@ function renderMenu() {
     c.fillStyle = 'black';
     c.fillText('High Score: ' + highScore, 10, 30);
 }
-
+//ui back ground graphic 
 function renderCustomGraphics() {
     // Clear canvas
     c.clearRect(0, 0, canvas.width, canvas.height);

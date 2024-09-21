@@ -1,3 +1,4 @@
+//crate object contain x,y,radius,sizeinde ball
 class GameObject {
     constructor(x, y, radius, img, sizeIndex) {
         this.x = x;
@@ -11,7 +12,7 @@ class GameObject {
         this.lastCollisionTime = 0;
         this.hasReachedBottom = false;
     }
-
+    //ball is failing
     startFalling() {
         this.falling = true;
     }
@@ -32,6 +33,7 @@ class GameObject {
             }
         }
     }
+    //draw object
     draw() {
         c.drawImage(this.img, this.x - this.radius, this.y - this.radius, this.radius * 2, this.radius * 2);
     }
