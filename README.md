@@ -25,7 +25,7 @@ Chơi game:
 Khi trang index.html được mở, bạn có thể bắt đầu chơi trò chơi bằng cách làm theo hướng dẫn trên màn hình.
 
 🎮 Các tính năng chính
-🕹️ Gameplay: Trò chơi có cơ chế rơi vật phẩm tương tự như Suika Game.
+🕹️ Gameplay: Trò chơi có cơ chế rơi vật phẩm tương tự như Melon maker.
 🎨 Đồ họa: Được xây dựng bằng canvas.
 🎛️ Điều khiển: Sử dụng chuột để điều khiển quả bóng trong game.
 ⚠️ Ghi chú
