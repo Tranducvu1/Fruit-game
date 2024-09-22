@@ -6,24 +6,26 @@ canvas.height = 715;
 let gameObjects = [];
 let previewBall;
 const gravity = 9.8;
+const restitution = 0.8;
 let score = 0;
 let highScore = localStorage.getItem('highScore') || 0;
 const loseHeight = canvas.height * 0.7;
 let ballCount = 0;
 let gameState = 'menu';
 let Failing = false;
+
 const fruitSizes = [
-    { radius: 24, scoreValue: 1, img: './assets/img/circle0.png' },
-    { radius: 32, scoreValue: 3, img: './assets/img/circle1.png' },
-    { radius: 40, scoreValue: 6, img: './assets/img/circle2.png' },
-    { radius: 56, scoreValue: 10, img: './assets/img/circle3.png' },
-    { radius: 64, scoreValue: 15, img: './assets/img/circle4.png' },
-    { radius: 72, scoreValue: 21, img: './assets/img/circle5.png' },
-    { radius: 84, scoreValue: 28, img: './assets/img/circle6.png' },
-    { radius: 96, scoreValue: 36, img: './assets/img/circle7.png' },
-    { radius: 128, scoreValue: 45, img: './assets/img/circle8.png' },
-    { radius: 160, scoreValue: 55, img: './assets/img/circle9.png' },
-    { radius: 192, scoreValue: 66, img: './assets/img/circle10.png' }
+    { radius: 24, scoreValue: 1, img: './assets/img/circle0.png', mass: 1 },
+    { radius: 32, scoreValue: 3, img: './assets/img/circle1.png', mass: 2 },
+    { radius: 40, scoreValue: 6, img: './assets/img/circle2.png', mass: 3 },
+    { radius: 56, scoreValue: 10, img: './assets/img/circle3.png', mass: 4 },
+    { radius: 64, scoreValue: 15, img: './assets/img/circle4.png', mass: 5 },
+    { radius: 72, scoreValue: 21, img: './assets/img/circle5.png', mass: 6 },
+    { radius: 84, scoreValue: 28, img: './assets/img/circle6.png', mass: 7 },
+    { radius: 96, scoreValue: 36, img: './assets/img/circle7.png', mass: 8 },
+    { radius: 128, scoreValue: 45, img: './assets/img/circle8.png', mass: 9 },
+    { radius: 160, scoreValue: 55, img: './assets/img/circle9.png', mass: 10 },
+    { radius: 192, scoreValue: 66, img: './assets/img/circle10.png', mass: 11 }
 ];
 
 // Load images
@@ -61,7 +63,6 @@ function init() {
 }
 
 function createPreviewBall() {
-  //  if(Failing){
     let size;
     if (ballCount <= 2) {
         size = fruitSizes[0];
@@ -72,11 +73,8 @@ function createPreviewBall() {
     } else {
         size = fruitSizes[Math.floor(Math.random() * 3)];
     }
-    previewBall = new GameObject(canvas.width / 2, 32, size.radius, size.img, fruitSizes.indexOf(size));
+    previewBall = new GameObject(canvas.width / 2,32,0, 0, size.radius, size.img, fruitSizes.indexOf(size), size.mass);
     ballCount++;
-//     Failing = true;
-// }
-// Failing = false;
 }
 
 function handleMouseMove(event) {
@@ -150,7 +148,8 @@ function mergeFruits(obj1, obj2) {
         const newSize = fruitSizes[newSizeIndex];
         const newX = (obj1.x + obj2.x) / 2;
         const newY = (obj1.y + obj2.y) / 2;
-        const newFruit = new GameObject(newX, newY, newSize.radius, newSize.img, newSizeIndex);
+        const summass = (obj1.mass + obj2.mass);
+        const newFruit = new GameObject(newX, newY,0,0, newSize.radius, newSize.img, newSizeIndex,summass);
         newFruit.falling = true;
         gameObjects.push(newFruit);
         
@@ -165,6 +164,7 @@ function mergeFruits(obj1, obj2) {
     gameObjects = gameObjects.filter(obj => obj !== obj1 && obj !== obj2);
 }
 
+
 function resolveBounce(obj1, obj2) {
     const dx = obj2.x - obj1.x;
     const dy = obj2.y - obj1.y;
@@ -172,30 +172,46 @@ function resolveBounce(obj1, obj2) {
     const overlap = (obj1.radius + obj2.radius) - distance;
 
     if (overlap > 0) {
+        // Separate objects
         const moveX = (dx / distance) * overlap / 2;
-       const moveY = (dy / distance) * overlap / 2;
-
-      
-      obj2.y += moveY;
+        const moveY = (dy / distance) * overlap / 2;
         obj1.x -= moveX;
-       obj1.y -= moveY;
+        obj1.y -= moveY;
         obj2.x += moveX;
-       obj2.y += moveY;
+        obj2.y += moveY;
 
-        obj1.x = Math.max(obj1.radius, Math.min(canvas.width - obj1.radius, obj1.x - moveX));
-        obj2.x = Math.max(obj2.radius, Math.min(canvas.width - obj2.radius, obj2.x + moveX));
+        // Calculate normal vector
+        const nx = dx / distance;
+        const ny = dy / distance;
 
-        // Ensure objects don't sink below the canvas
-        obj1.y = Math.min(obj1.y, canvas.height - obj1.radius);
-      obj2.y = Math.min(obj2.y, canvas.height - obj2.radius);
+        // Calculate relative velocity
+        const dvx = obj2.vx - obj1.vx;
+        const dvy = obj2.vy - obj1.vy;
 
-        const tempVelocityY = obj1.velocityY;
-        obj1.velocityY = obj2.velocityY;
-        obj2.velocityY = tempVelocityY;
+        // Calculate impulse
+        const impulse = 2 * (dvx * nx + dvy * ny) / (obj1.mass + obj2.mass);
+
+        // Apply impulse
+        obj1.vx += impulse * obj2.mass * nx;
+        obj1.vy += impulse * obj2.mass * ny;
+        obj2.vx -= impulse * obj1.mass * nx;
+        obj2.vy -= impulse * obj1.mass * ny;
+
+        // Apply restitution
+        obj1.vx *= restitution;
+        obj1.vy *= restitution;
+        obj2.vx *= restitution;
+        obj2.vy *= restitution;
 
         playSound('click');
     }
 }
+function circleIntersect(x1, y1, r1, x2, y2, r2) {
+    let squareDistance = (x1 - x2) * (x1 - x2) + (y1 - y2) * (y1 - y2);
+    return squareDistance <= ((r1 + r2) * (r1 + r2));
+}
+
+
 function isHorizontalFilled() {
     const filled = new Array(canvas.width).fill(false);
 
