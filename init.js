@@ -1,3 +1,4 @@
+
 function update(deltaTime) {
     if (gameState === 'playing') {
         for (let obj of gameObjects) {

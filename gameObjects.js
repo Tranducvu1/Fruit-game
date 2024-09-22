@@ -29,7 +29,7 @@ class GameObject {
         this.detectEdgeCollisions();
 
        
-        if (Math.abs(this.vy) < 0.1 && Math.abs(this.vx) < 0.1 && this.y + this.radius >= canvas.height - 1) {
+        if (Math.abs(this.vy) < 1 && Math.abs(this.vx) < 1) {
             this.canClick = true; 
             this.falling = false;
         }

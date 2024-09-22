@@ -1,3 +1,4 @@
+const eventEmitter = new EventEmitter();
 const canvas = document.querySelector('canvas');
 const c = canvas.getContext('2d');
 canvas.width = 1024;
@@ -108,18 +109,27 @@ function handleClick(event) {
         if (mouseX > canvas.width / 2 - 256 && mouseX < canvas.width / 2 + 256 &&
             mouseY > canvas.height * 0.75 - 48 && mouseY < canvas.height * 0.75 + 48) {
             playSound('click');
-            startGame();
+          //  startGame();
+          eventEmitter.emit('startGame');
         }
     }
 }
 
-function startGame() {
-    gameState = 'playing';
-    gameObjects = [];
-    score = 0;
-    ballCount = 0;
-    createPreviewBall();
-}
+eventEmitter.on('startGame',() => {
+        gameState = 'playing';
+        gameObjects = [];
+        score = 0;
+        ballCount = 0;
+        createPreviewBall();
+});
+
+// function startGame() {
+//     gameState = 'playing';
+//     gameObjects = [];
+//     score = 0;
+//     ballCount = 0;
+//     createPreviewBall();
+// }
 
 function checkCollisions() {
     for (let i = 0; i < gameObjects.length; i++) {
@@ -133,27 +143,31 @@ function checkCollisions() {
 
             if (distance < obj1.radius + obj2.radius) {
                 if (obj1.sizeIndex === obj2.sizeIndex) {
-                    mergeFruits(obj1, obj2);
+                    eventEmitter.emit('mergeFruits', obj1, obj2);
                 } else {
-                    resolveBounce(obj1, obj2);
+                   // resolveBounce(obj1, obj2);
+                    eventEmitter.emit('resolveBounce',obj1,obj2);
                 }
             }
         }
     }
 }
 
-function mergeFruits(obj1, obj2) {
+eventEmitter.on('mergeFruits', (obj1, obj2) => {
+ 
     const newSizeIndex = obj1.sizeIndex + 1;
     if (newSizeIndex < fruitSizes.length) {
         const newSize = fruitSizes[newSizeIndex];
         const newX = (obj1.x + obj2.x) / 2;
         const newY = (obj1.y + obj2.y) / 2;
         const summass = (obj1.mass + obj2.mass);
-        const newFruit = new GameObject(newX, newY,0,0, newSize.radius, newSize.img, newSizeIndex,summass);
+        const newFruit = new GameObject(newX, newY, 0, 0, newSize.radius, newSize.img, newSizeIndex, summass);
         newFruit.falling = true;
         gameObjects.push(newFruit);
-        
+
         playSound(`pop${newSizeIndex}`);
+
+
     }
 
     score += fruitSizes[obj1.sizeIndex].scoreValue;
@@ -162,10 +176,9 @@ function mergeFruits(obj1, obj2) {
         localStorage.setItem('highScore', highScore);
     }
     gameObjects = gameObjects.filter(obj => obj !== obj1 && obj !== obj2);
-}
+});
 
-
-function resolveBounce(obj1, obj2) {
+eventEmitter.on('resolveBounce',(obj1,obj2) => {
     const dx = obj2.x - obj1.x;
     const dy = obj2.y - obj1.y;
     const distance = Math.sqrt(dx * dx + dy * dy);
@@ -205,7 +218,9 @@ function resolveBounce(obj1, obj2) {
 
         playSound('click');
     }
-}
+});
+
+
 function circleIntersect(x1, y1, r1, x2, y2, r2) {
     let squareDistance = (x1 - x2) * (x1 - x2) + (y1 - y2) * (y1 - y2);
     return squareDistance <= ((r1 + r2) * (r1 + r2));
