@@ -3,7 +3,6 @@ const canvas = document.querySelector('canvas');
 const c = canvas.getContext('2d');
 canvas.width = 1024;
 canvas.height = 715;
-
 let gameObjects = [];
 let previewBall;
 const gravity = 9.8;
@@ -51,7 +50,6 @@ const sounds = {
     pop10: new Audio('./assets/pop10.mp3'),
 };
 
-
 let lastSoundTime = 0;
 const soundCooldown = 100; 
 
@@ -62,7 +60,7 @@ function init() {
     lastTime = performance.now();
     gameLoop();
 }
-
+//create ball, init first ball failing
 function createPreviewBall() {
     let size;
     if (ballCount <= 2) {
@@ -74,10 +72,12 @@ function createPreviewBall() {
     } else {
         size = fruitSizes[Math.floor(Math.random() * 3)];
     }
-    previewBall = new GameObject(canvas.width / 2,32,0, 0, size.radius, size.img, fruitSizes.indexOf(size), size.mass);
+    //add tween for Ball
+    previewBall = new GameObject(canvas.width / 2,32,0, 0, size.radius, size.img, fruitSizes.indexOf(size), size.mass,Tween.easeInSine);
     ballCount++;
 }
 
+//mouse X move ball 
 function handleMouseMove(event) {
     if (gameState === 'playing') {
         const rect = canvas.getBoundingClientRect();
@@ -87,7 +87,7 @@ function handleMouseMove(event) {
         }
     }
 }
-
+//faling ball state playing
 function handleMouseUp() {
     if (gameState === 'playing' && previewBall) {
         if (gameObjects.length === 0 || gameObjects[gameObjects.length - 1].hasReachedBottom) {
@@ -98,7 +98,7 @@ function handleMouseUp() {
     }
 }
 }
-
+//click faling ball
 function handleClick(event) {
     if (gameState === 'menu') {
         const rect = canvas.getBoundingClientRect();
@@ -114,7 +114,7 @@ function handleClick(event) {
         }
     }
 }
-
+//start game
 eventEmitter.on('startGame',() => {
         gameState = 'playing';
         gameObjects = [];
@@ -130,7 +130,7 @@ eventEmitter.on('startGame',() => {
 //     ballCount = 0;
 //     createPreviewBall();
 // }
-
+//check collisiion 2 obj 
 function checkCollisions() {
     for (let i = 0; i < gameObjects.length; i++) {
         for (let j = i + 1; j < gameObjects.length; j++) {
@@ -152,7 +152,7 @@ function checkCollisions() {
         }
     }
 }
-
+//merge 2 obj fruit same radius 
 eventEmitter.on('mergeFruits', (obj1, obj2) => {
  
     const newSizeIndex = obj1.sizeIndex + 1;
@@ -169,7 +169,7 @@ eventEmitter.on('mergeFruits', (obj1, obj2) => {
 
 
     }
-
+        //calculate + 1 size after merged
     score += fruitSizes[obj1.sizeIndex].scoreValue;
     if (score > highScore) {
         highScore = score;
@@ -177,7 +177,7 @@ eventEmitter.on('mergeFruits', (obj1, obj2) => {
     }
     gameObjects = gameObjects.filter(obj => obj !== obj1 && obj !== obj2);
 });
-
+//resolve Bounce on 2 obj
 eventEmitter.on('resolveBounce',(obj1,obj2) => {
     const dx = obj2.x - obj1.x;
     const dy = obj2.y - obj1.y;
@@ -226,7 +226,7 @@ function circleIntersect(x1, y1, r1, x2, y2, r2) {
     return squareDistance <= ((r1 + r2) * (r1 + r2));
 }
 
-
+//check horizontalfilled full 
 function isHorizontalFilled() {
     const filled = new Array(canvas.width).fill(false);
 
@@ -240,19 +240,19 @@ function isHorizontalFilled() {
 
     return filled.every(val => val === true);
 }
+//render ui game over 
+// function renderGameOver() {
+//     c.font = '48px Arial';
+//     c.fillStyle = 'red';
+//     c.fillText('Game Over', canvas.width / 2 - 150, canvas.height / 2);
 
-function renderGameOver() {
-    c.font = '48px Arial';
-    c.fillStyle = 'red';
-    c.fillText('Game Over', canvas.width / 2 - 150, canvas.height / 2);
+//     c.font = '24px Arial';
+//     c.fillText('Click to restart', canvas.width / 2 - 100, canvas.height / 2 + 50);
 
-    c.font = '24px Arial';
-    c.fillText('Click to restart', canvas.width / 2 - 100, canvas.height / 2 + 50);
+//     canvas.addEventListener('click', handleRestart);
+// }
 
-    canvas.addEventListener('click', handleRestart);
-}
-
-
+//check game over if horizoltalfill full 
 function checkGameOver() {
     if (isHorizontalFilled()) {
         for (let i = 0; i < gameObjects.length; i++) {
@@ -267,7 +267,7 @@ function checkGameOver() {
     return false;
 }
 
-
+//render game over
 function renderGameOver() {
     c.fillStyle = 'rgba(0, 0, 0, 0.5)';
     c.fillRect(0, 0, canvas.width, canvas.height);

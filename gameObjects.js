@@ -1,5 +1,6 @@
 class GameObject {
-    constructor(x, y, vx, vy, radius, img, sizeIndex, mass) {
+    //constrcutor ball location, velocity,radius,masss
+    constructor(x, y, vx, vy, radius, img, sizeIndex, mass,easing = Tween.easeLinear) {
         this.x = x;
         this.y = y;
         this.vx = vx; 
@@ -12,29 +13,33 @@ class GameObject {
         this.sizeIndex = sizeIndex;
         this.falling = false;
         this.hasReachedBottom = false;
-        this.groundRestitution = 0.2;
+        this.groundRestitution = 0.15;
         this.wallRestitution = 0.6;
         this.canClick = true; 
+        this.easing = easing;
     }
 
+    
+    //starting faling
     startFalling() {
         this.falling = true;
         this.canClick = false; 
     }
-    
+    //update balll after secondpassed
     update(secondsPassed) {
+
         this.vy += gravity;
         this.x += this.vx * secondsPassed;
         this.y += this.vy * secondsPassed;
         this.detectEdgeCollisions();
 
-       
+       //Check whether it touches the ground or not
         if (Math.abs(this.vy) < 1 && Math.abs(this.vx) < 1) {
             this.canClick = true; 
             this.falling = false;
         }
     }
-
+    ///dêtctcollision ball walls
     detectEdgeCollisions() {
         if (this.x - this.radius < 0) {
             this.x = this.radius;
@@ -53,12 +58,11 @@ class GameObject {
             this.hasReachedBottom = true;
         }
     }
-
+    //draw ball
     draw() {
         c.drawImage(this.img, this.x - this.radius, this.y - this.radius, this.radius * 2, this.radius * 2);
     }
-
-   
+    //check click if ball faling
     isClickable() {
         return this.canClick;
     }

@@ -1,38 +1,28 @@
 🌟 Game melon maker clone
-Đây là một bản sao của trò chơi Game melon maker. Dự án này được viết bằng HTML, CSS, và JavaScript.
+This is a clone of the game melon maker. This project is written in HTML, CSS, and JavaScript have Tween.js, EventEmitter.
 
-🛠️ Yêu cầu hệ thống
-🖥️ Trình duyệt hiện đại (Google Chrome, Firefox, Safari, v.v.)
-🌐 Kết nối internet (nếu có sử dụng thư viện từ CDN)
-🚀 Cách chạy game
-Tải mã nguồn về máy tính:
+🛠️ System Requirements
+🖥️ Modern browsers (Google Chrome, Firefox, Safari, etc.)
+🌐 An internet connection (if using a library from a CDN)
+🚀 How to run the game
+Download the source code to your computer:
 
-Bạn có thể tải mã nguồn bằng cách clone repo từ GitHub hoặc tải trực tiếp tệp zip.
+You can download the source code by cloning the repo from GitHub or downloading the zip file directly.
 
-bash
+Bash
 Copy code
 git clone <https://github.com/Tranducvu1/Fruit-game.git>
-Hoặc tải file ZIP từ GitHub và giải nén nó.
+Or download the ZIP file from GitHub and extract it.
 
-Mở tệp index.html:
+Open index.html file:
 
-Sau khi tải mã nguồn về, bạn chỉ cần mở tệp index.html trong trình duyệt để bắt đầu chơi.
+Once you've downloaded the source code, you just need to open the index.html file in your browser to start playing.
 
-Trình duyệt: Nhấp đôi vào tệp index.html, nó sẽ mở trình duyệt mặc định và hiển thị trò chơi.
-Trình duyệt khác: Bạn có thể kéo tệp index.html vào cửa sổ trình duyệt bạn muốn sử dụng.
-Chơi game:
+Browser: Double-click on the index.html file, it will open the default browser and display the game.
+Other browsers: You can drag index.html file into the browser window you want to use.
+Gaming:
 
-Khi trang index.html được mở, bạn có thể bắt đầu chơi trò chơi bằng cách làm theo hướng dẫn trên màn hình.
+Once the index.html page is opened, you can start playing the game by following the on-screen instructions.
 
-🎮 Các tính năng chính
-🕹️ Gameplay: Trò chơi có cơ chế rơi vật phẩm tương tự như Melon maker.
-🎨 Đồ họa: Được xây dựng bằng canvas.
-🎛️ Điều khiển: Sử dụng chuột để điều khiển quả bóng trong game.
-⚠️ Ghi chú
-Nếu bạn gặp vấn đề khi mở index.html, hãy kiểm tra xem trình duyệt của bạn có hỗ trợ các tính năng như canvas hay không.
-Dự án này được phát triển cho mục đích học tập và không nhằm mục đích thương mại.
-🤝 Đóng góp
-Nếu bạn muốn đóng góp vào dự án, vui lòng mở Pull Request hoặc tạo Issue trên GitHub.
-
-📜 Giấy phép
-Dự án này được phát hành dưới giấy phép MIT. Xem tệp LICENSE để biết thêm chi tiết.
+🎮 Key features
+🕹️ Gameplay: The game has a matching item drop mechanic
